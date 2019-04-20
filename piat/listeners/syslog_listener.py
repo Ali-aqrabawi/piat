@@ -4,6 +4,7 @@ import socketserver
 from piat.parsers.syslog import SyslogMsg
 from piat.utils.threads import ThreadsManager
 
+
 # LOG_FILE = 'logs/syslog.log'
 #
 # logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode='a')
@@ -15,7 +16,7 @@ class SyslogHandler(socketserver.BaseRequestHandler):
     def handle(self):
         data = bytes.decode(self.request[0].strip())
         ip = self.client_address[0]
-        #logging.debug("received message from %s, msg=%s" % (ip, data))
+        # logging.debug("received message from %s, msg=%s" % (ip, data))
         syslog_msg = SyslogMsg.create_msg(ip, data)
         socket = self.request[1]
         proc_mgr = ThreadsManager()

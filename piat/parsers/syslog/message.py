@@ -62,7 +62,7 @@ class SyslogMsg:
         self._msg = None
         self._parse()
 
-        self.facility, self.severity = self.get_facility_severity()
+        self.facility, self.severity = self._get_facility_severity()
         self.tag = self._tag
         self.message = self._msg
         self.timestamp = datetime.now()
@@ -73,7 +73,7 @@ class SyslogMsg:
             if field_value:
                 setattr(self, field, field_value.group(1))
 
-    def get_facility_severity(self):
+    def _get_facility_severity(self):
         if not self._pri:
             return None, None
         pri_bin = bin(int(self._pri))
