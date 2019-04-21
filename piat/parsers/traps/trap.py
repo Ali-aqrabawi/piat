@@ -12,14 +12,16 @@ class TrapMsg:
         self._parsed_data = {}
         self._parse()
 
-        self.result = {'ip': self.snmpTrapAddress, 'timestamp': str(self.timestamp), **self._parsed_data}
+        self.result = {'ip': self._parsed_data['snmpTrapAddress'],
+                       'timestamp': str(self.timestamp), **self._parsed_data}
 
     def _parse(self):
         for name, val in self._var_binds:
-            symbol = rfc1902.ObjectIdentity(name).resolveWithMib(self._viewer).getMibSymbol()
-            # val = rfc1902.ObjectIdentity(val).resolveWithMib(viewer)
-            self._parsed_data[symbol[1]] = val.prettyPrint()
-            setattr(self, symbol[1], val.prettyPrint())
+            var_bind = rfc1902.ObjectType(rfc1902.ObjectIdentity(name), val)
+            var_bind.resolveWithMib(self._viewer)
+            obj_name = var_bind[0].getMibSymbol()[1]
+            value = var_bind[1].prettyPrint()
+            self._parsed_data[obj_name] = value
 
     def get_dictionary(self):
         return self.result

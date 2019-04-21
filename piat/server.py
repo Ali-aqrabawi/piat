@@ -20,7 +20,7 @@ class PiatServer:
                  syslog_callbacks,
                  traps_callbacks,
                  syslog_port=514,
-                 trap_port=161,
+                 trap_port=162,
                  trap_community='public',
                  enable_trap_service=True,
                  enable_syslog_service=True):
