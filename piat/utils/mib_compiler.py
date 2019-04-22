@@ -1,4 +1,4 @@
-import sys
+import argparse
 import os
 
 
@@ -15,3 +15,4 @@ def compile(path):
             os.system(cmd)
 
 compile('/home/aaqrabaw/PycharmProjects/piat_project/snmp')
+

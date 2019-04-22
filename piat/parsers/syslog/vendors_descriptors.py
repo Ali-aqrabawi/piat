@@ -1,5 +1,5 @@
 """
-descriptors modules that descript vendors syslog formats by regexes
+descriptors module that describe vendors syslog formats by regexes
 """
 default_desc = {
     'name': 'default',
@@ -34,4 +34,25 @@ juniper_desc = {
     }
 }
 
-all_descriptors = [cisco_desc, arista_desc, juniper_desc]
+forinet_desc = {
+    'name': 'fortinet',
+    'sig': '.level=\w+',
+    'fields': {
+        '_pri': r'<(\d+)>',
+        '_tag': r'type=([\w_]+)',
+        '_msg': r'type=[\w_]+\.(.*)'
+    }
+}
+
+
+paloalto_desc = {
+    'name': 'paloalto',
+    'sig': '.level=\w+',
+    'fields': {
+        '_pri': r'<(\d+)>',
+        '_tag': r'type=([\w_]+)',
+        '_msg': r'type=[\w_]+\.(.*)'
+    }
+}
+
+all_descriptors = [cisco_desc, arista_desc, juniper_desc,forinet_desc]
