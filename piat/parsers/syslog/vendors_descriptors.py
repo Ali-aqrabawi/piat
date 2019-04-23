@@ -1,15 +1,5 @@
 """
 descriptors module that describe vendors syslog formats by regexes
-{
-    'name': 'cisco', # name
-    'sig': r'\s+%\S+\s?:\s', signature to determine if this a cisco's syslog
-    'fields': {
-        '_pri': r'<(\d+)>',
-        '_tag': r'%(\S+)\s?:',
-        '_msg': r'%\S+\s?:\s+(.*)'
-    },
-
-}
 """
 default_desc = {
     'name': 'default',
@@ -21,8 +11,8 @@ default_desc = {
 }
 
 cisco_desc = {
+    'sig': r'%\S+\s?:\s',
     'name': 'cisco',
-    'sig': r'\s+%\S+\s?:\s',
     'fields': {
         '_pri': r'<(\d+)>',
         '_tag': r'%(\S+)\s?:',
@@ -73,5 +63,15 @@ huawei_desc = {
         '_msg': r'%%.+:\s?(.*)'
     }
 }
+hp_desc = {
+    'name': 'hp',
+    'sig': '\w+:\s\w+',
+    'fields': {
+        '_pri': r'<(\d+)>',
+        '_tag': r'(\w+):\s',
+        '_msg': r':\s([^:|.]+)'
+    }
+}
 
-all_descriptors = [cisco_desc, arista_desc, juniper_desc, forinet_desc, f5_desc, huawei_desc]
+
+all_descriptors = [cisco_desc, arista_desc, juniper_desc, forinet_desc, f5_desc, huawei_desc,hp_desc]

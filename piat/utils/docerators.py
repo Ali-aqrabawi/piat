@@ -9,6 +9,6 @@ def restart_on_failure(func):
 
             except Exception as e:
                 print(e)
-            time.sleep(0.2)
+            time.sleep(1)
 
     return wrapped
