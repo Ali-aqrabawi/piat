@@ -2,16 +2,10 @@ from pysnmp.entity import engine, config
 from pysnmp.carrier.asyncore.dgram import udp
 from pysnmp.smi import view, builder
 from pysnmp.entity.rfc3413 import ntfrcv, mibvar
-
 from piat.utils.threads import ThreadsManager
 from piat.utils.docerators import restart_on_failure
 from piat.parsers.traps.trap import TrapMsg
 
-snmpEngine = engine.SnmpEngine()
-build = snmpEngine.getMibBuilder()
-build.addMibSources(builder.DirMibSource("/home/aaqrabaw/.pysnmp/mibs"))
-#build.addMibSources(builder.DirMibSource("/home/aaqrabaw/PycharmProjects/piat_project/pre_comp"))
-build.loadModules()
 
 class TrapsHandler:
 
@@ -34,33 +28,30 @@ class TrapsHandler:
         proc_mgr.start()
 
 
-@restart_on_failure
-def run(callbacks, community='public', port=162):
-    # Create SNMP engine with autogenernated engineID and pre-bound
-    # to socket transport dispatcher
 
+def create_engine(callbacks, community='public', port=162):
+    snmpEngine = engine.SnmpEngine()
+    build = snmpEngine.getMibBuilder()
+    build.addMibSources(builder.DirMibSource("/home/aaqrabaw/.pysnmp/mibs"))
+    build.loadModules()
     viewer = view.MibViewController(build)
-
-    handler = TrapsHandler(callbacks, viewer)
-
     # UDP over IPv4, first listening interface/port
-    config.addTransport(
-        snmpEngine,
-        udp.domainName + (1,),
-        udp.UdpTransport().openServerMode(('0.0.0.0', port))
-    )
-
-    # SNMPv1/2c setup
-
+    transport = udp.UdpTransport()
+    config.addTransport(snmpEngine, udp.domainName + (1,), transport.openServerMode(('0.0.0.0', port)))
     # SecurityName <-> CommunityName mapping
     config.addV1System(snmpEngine, '????', community)
-
     # Register SNMP Application at the SNMP engine
+    handler = TrapsHandler(callbacks, viewer)
     ntfrcv.NotificationReceiver(snmpEngine, handler.handle)
+    return snmpEngine
 
-    snmpEngine.transportDispatcher.jobStarted(1)  # this job would never finish
-    import time
 
-    # Run I/O dispatcher which would receive queries and send confirmations
-
+@restart_on_failure
+def start(snmpEngine):
+    snmpEngine.transportDispatcher.jobStarted(1)
     snmpEngine.transportDispatcher.runDispatcher()
+
+
+def run(callbacks, community='public', port=162):
+    snmpEngine = create_engine(callbacks, community, port)
+    start(snmpEngine)
