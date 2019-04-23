@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
-#from piat.utils.mib_compiler import compile
+from piat.utils.mib_compiler import compile
+
 
 parser = argparse.ArgumentParser(description='compile mib files')
 parser.add_argument('--source-dir', dest='source_dir', help='source directory of the MIBs',required=True)

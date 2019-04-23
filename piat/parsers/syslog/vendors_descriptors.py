@@ -44,7 +44,6 @@ forinet_desc = {
     }
 }
 
-
 paloalto_desc = {
     'name': 'paloalto',
     'sig': '.level=\w+',
@@ -55,4 +54,14 @@ paloalto_desc = {
     }
 }
 
-all_descriptors = [cisco_desc, arista_desc, juniper_desc,forinet_desc]
+hp_desc = {
+    'name': 'hp',
+    'sig': '\w+:\s\w+',
+    'fields': {
+        '_pri': r'<(\d+)>',
+        '_tag': r'(\w+):\s',
+        '_msg': r':\s([^:|.]+)'
+    }
+}
+
+all_descriptors = [cisco_desc, arista_desc, juniper_desc, forinet_desc, hp_desc]
