@@ -1,0 +1,2 @@
+class PiatError(Exception):
+    pass

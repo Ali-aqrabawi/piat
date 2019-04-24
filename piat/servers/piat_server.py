@@ -15,23 +15,30 @@ class PiatServer:
                  syslog_port=514,
                  trap_port=162,
                  trap_community='public',
-                 enable_trap_service=True,
-                 enable_syslog_service=True):
+                 use_precombiled_mibs=True,
+                 add_mib_dir=''):
 
         self._syslog_callbacks = syslog_callbacks
         self._trap_callbacks = traps_callbacks
         self._syslog_port = syslog_port
         self._trap_port = trap_port
         self._trap_community = trap_community
-        self._enable_trap_service = enable_trap_service
-        self._enable_syslog_service = enable_syslog_service
+        self._use_precombiled_mibs = use_precombiled_mibs
+        self._add_mib_dir = add_mib_dir
         self._processes = []
 
         self._setup()
 
     def _setup(self):
-        syslog_server = SyslogServer(self._syslog_callbacks, self._syslog_port)
-        trap_server = SnmpTrapServer(self._trap_callbacks, self._trap_community, self._trap_port)
+        syslog_server = SyslogServer(self._syslog_callbacks,
+                                     self._syslog_port)
+
+        trap_server = SnmpTrapServer(self._trap_callbacks,
+                                     self._trap_community,
+                                     self._trap_port,
+                                     self._use_precombiled_mibs,
+                                     self._add_mib_dir)
+
         syslog_proc = Process(target=syslog_server.start)
         trap_proc = Process(target=trap_server.start)
         self._processes = [syslog_proc, trap_proc]

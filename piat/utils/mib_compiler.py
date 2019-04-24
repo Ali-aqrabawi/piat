@@ -14,5 +14,5 @@ def compile(path):
         if filename.endswith(".my") or filename.endswith(".mib"):
             os.system(cmd)
 
-compile('/home/aaqrabaw/PycharmProjects/piat_project/snmp')
+compile('/home/aaqrabaw/Desktop/cisco_mibs/arista')
 

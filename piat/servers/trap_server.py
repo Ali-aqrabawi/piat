@@ -5,6 +5,8 @@ from pysnmp.entity.rfc3413 import ntfrcv, mibvar
 from piat.utils.threads import ThreadsManager
 from piat.utils.docerators import restart_on_failure
 from piat.parsers.traps.trap import TrapMsg
+from piat.exceptions import PiatError
+import os
 
 
 class TrapsHandler:
@@ -30,10 +32,12 @@ class TrapsHandler:
 
 class SnmpTrapServer:
 
-    def __init__(self, callbacks, community='public', port=162):
+    def __init__(self, callbacks, community='public', port=162, use_precombiled_mibs=True, add_mib_dir=''):
         self._callbacks = callbacks
         self._port = port
         self._community = community
+        self._use_precombiled_mibs = use_precombiled_mibs
+        self._add_mib_dir = add_mib_dir
         self._setup()
 
     def _setup(self):
@@ -41,7 +45,16 @@ class SnmpTrapServer:
             self._callbacks)
         snmpEngine = engine.SnmpEngine()
         build = snmpEngine.getMibBuilder()
-        build.addMibSources(builder.DirMibSource("/home/aaqrabaw/.pysnmp/mibs"))
+        if self._use_precombiled_mibs:
+            build.addMibSources(builder.DirMibSource(os.environ['PIAT_MIB_PATH']))
+
+        if self._add_mib_dir:
+            if not os.path.exists(self._add_mib_dir):
+                raise PiatError("mib dir does not exist, dir=%r" % self._add_mib_dir)
+            if not os.path.isdir(self._add_mib_dir):
+                raise PiatError("add_mib_dir should be a directory not a file, add_mib_dir=%r" % self._add_mib_dir)
+            build.addMibSources(builder.DirMibSource(self._add_mib_dir))
+
         build.loadModules()
         viewer = view.MibViewController(build)
         # UDP over IPv4, first listening interface/port

@@ -38,5 +38,3 @@ class SyslogServer:
     @restart_on_failure
     def start(self):
         self.server.serve_forever(poll_interval=0.5)
-
-
