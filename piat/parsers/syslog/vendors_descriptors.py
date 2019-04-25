@@ -21,7 +21,7 @@ cisco_desc = {
 
 }
 
-arista_desc = cisco_desc
+arista_desc = cisco_desc.copy()
 arista_desc.update({'name': 'arista'})
 
 juniper_desc = {
@@ -73,5 +73,4 @@ hp_desc = {
     }
 }
 
-
-all_descriptors = [cisco_desc, arista_desc, juniper_desc, forinet_desc, f5_desc, huawei_desc,hp_desc]
+all_descriptors = [cisco_desc, arista_desc, juniper_desc, forinet_desc, f5_desc, huawei_desc, hp_desc]

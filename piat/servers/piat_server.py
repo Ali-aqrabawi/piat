@@ -1,3 +1,10 @@
+# (c) 2019, Ali Aqrabawi <aaqrabawn@gmail.com>
+#
+# This file is part of Piat
+#
+# Piat is free software licensed under MIT License.
+# Piat Server Module has the PiatServer Class which run both Syslog And Traps servers in
+# two independent processes
 from multiprocessing import Process
 from piat.servers.trap_server import SnmpTrapServer
 from piat.servers.syslog_server import SyslogServer
@@ -8,6 +15,9 @@ class PiatServer:
     PiatServer is the Server that manages and run both Syslog and trap services,
     each service will be running as a independent process.
     """
+
+    # pylint: disable=too-many-instance-attributes
+    # Eight is reasonable in this case.
 
     def __init__(self,
                  syslog_callbacks,

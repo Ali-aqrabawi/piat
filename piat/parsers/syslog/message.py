@@ -1,7 +1,8 @@
 from datetime import datetime
 import re
-from .vendors_descriptors import all_descriptors, default_desc
 from piat.utils.logger import get_logger
+from .vendors_descriptors import all_descriptors, default_desc
+
 
 LOGGER = get_logger(__name__)
 
@@ -76,17 +77,21 @@ class SyslogMsg:
         self.timestamp = datetime.now()
 
     def _parse(self):
+        """ pasre the syslog msg """
         for field, regex in self.fields.items():
             field_value = re.search(regex, self._data)
             if field_value:
                 setattr(self, field, field_value.group(1))
             else:
                 LOGGER.error(
-                    "failed to parse field: %r regex: %r, source: %r, data: %s" % (field, regex, self.ip, self._data))
+                    "failed to parse field: %r regex: %r, source: %r, data: %s",
+                    field, regex, self.ip, self._data)
 
     def _get_facility_severity(self):
+        """ exttact facility and serverity from self._pri """
         if not self._pri:
-            LOGGER.error("failed to parse pri field from syslog message, source: %r, data: %s" % (self.ip, self._data))
+            LOGGER.error("failed to parse pri field from syslog message, source: %r, data: %s",
+                         self.ip, self._data)
             return None, None
         pri_bin = bin(int(self._pri))
         severity = int(pri_bin[-3:], base=2)
@@ -104,8 +109,9 @@ class SyslogMsg:
 
         vendor_desc = detect_vendor_from_msg(data)
         if vendor_desc is None:
-            LOGGER.error("failed to detect source syslog msg vendor, source: %r, data: %s" % (ip, data))
-            return
+            LOGGER.error("failed to detect source syslog msg vendor, source: %r, data: %s",
+                         ip, data)
+            return None
         cls.fields = vendor_desc['fields']
         return cls(ip, data)
 

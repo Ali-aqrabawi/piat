@@ -1,11 +1,12 @@
-from pysnmp.smi import rfc1902
 from datetime import datetime
+from pysnmp.smi import rfc1902
 from piat.utils.logger import get_logger
 
 LOGGER = get_logger(__name__)
 
 
 class TrapMsg:
+    """ Trap msg Object """
     def __init__(self, var_binds, viewer):
         """
         Trap Msg Object.
@@ -24,6 +25,7 @@ class TrapMsg:
                        'timestamp': str(self.timestamp), **self._parsed_data}
 
     def _parse(self):
+        """ translate the trap msg with the mib viewer """
         for name, val in self._var_binds:
             var_bind = rfc1902.ObjectType(rfc1902.ObjectIdentity(name), val)
             var_bind.resolveWithMib(self._viewer)

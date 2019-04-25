@@ -2,6 +2,7 @@ import time
 
 
 def restart_on_failure(func):
+    """ Decorator to restart function if it failed or an exc raised"""
     def wrapped(*args, **kwargs):
         while True:
             try:
