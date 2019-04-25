@@ -5,8 +5,11 @@ from pysnmp.entity.rfc3413 import ntfrcv, mibvar
 from piat.utils.threads import ThreadsManager
 from piat.utils.docerators import restart_on_failure
 from piat.parsers.traps.trap import TrapMsg
+from piat.utils.logger import get_logger
 from piat.exceptions import PiatError
 import os
+
+LOGGER = get_logger(__name__)
 
 
 class TrapsHandler:
@@ -14,12 +17,11 @@ class TrapsHandler:
     def __init__(self, callbacks, viewer):
         self._callbacks = callbacks
         self._viewer = viewer
+        LOGGER.debug("adding %r callbacks to Trap server" % ([func.__name__ for func in self._callbacks]))
 
-    # Callback function for receiving notifications
-    # noinspection PyUnusedLocal,PyUnusedLocal,PyUnusedLocal
     def handle(self, snmpEngine, stateReference, contextEngineId, contextName, varBinds, cbCtx):
-        print('Notification from ContextEngineId "%s", ContextName "%s"' % (contextEngineId.prettyPrint(),
-                                                                            contextName.prettyPrint()))
+        LOGGER.debug('Notification from ContextEngineId "%s", ContextName "%s"' % (contextEngineId.prettyPrint(),
+                                                                                   contextName.prettyPrint()))
 
         trap_log = TrapMsg(varBinds, self._viewer)
         proc_mgr = ThreadsManager()
@@ -69,5 +71,6 @@ class SnmpTrapServer:
 
     @restart_on_failure
     def start(self):
+        LOGGER.info("Syslog Server Started...")
         self._snmpEngine.transportDispatcher.jobStarted(1)
         self._snmpEngine.transportDispatcher.runDispatcher()
