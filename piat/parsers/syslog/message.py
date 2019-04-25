@@ -1,6 +1,9 @@
 from datetime import datetime
 import re
 from .vendors_descriptors import all_descriptors, default_desc
+from piat.utils.logger import get_logger
+
+LOGGER = get_logger(__name__)
 
 _SEVERITIES = {
     0: 'emergency',
@@ -53,6 +56,11 @@ class SyslogMsg:
     fields = {}
 
     def __init__(self, ip, data):
+        """
+        syslog Msg Object.
+        :param ip: string
+        :param data: string: raw packet data
+        """
 
         self.ip = ip
 
@@ -72,9 +80,13 @@ class SyslogMsg:
             field_value = re.search(regex, self._data)
             if field_value:
                 setattr(self, field, field_value.group(1))
+            else:
+                LOGGER.error(
+                    "failed to parse field: %r regex: %r, source: %r, data: %s" % (field, regex, self.ip, self._data))
 
     def _get_facility_severity(self):
         if not self._pri:
+            LOGGER.error("failed to parse pri field from syslog message, source: %r, data: %s" % (self.ip, self._data))
             return None, None
         pri_bin = bin(int(self._pri))
         severity = int(pri_bin[-3:], base=2)
@@ -83,9 +95,16 @@ class SyslogMsg:
 
     @classmethod
     def create_msg(cls, ip, data):
+        """
+        class method to create a Syslog Msh based on the source msg vendor.
+        :param ip: str
+        :param data: str: raw packet data
+        :return:
+        """
 
         vendor_desc = detect_vendor_from_msg(data)
         if vendor_desc is None:
+            LOGGER.error("failed to detect source syslog msg vendor, source: %r, data: %s" % (ip, data))
             return
         cls.fields = vendor_desc['fields']
         return cls(ip, data)
@@ -99,26 +118,3 @@ class SyslogMsg:
             'facility': self.facility,
             'msg': self.message
         }
-
-# msgs = """
-# <187>: 2019 Apr 18 10:57:54 UTC: %AUTHPRIV-3-SYSTEM_MSG: pam_aaa:Authentication failed from 119.29.170.202 - dcos_sshd[14361]
-# <187>: 2019 Apr 18 11:00:27 UTC: last message repeated 180 times
-# <149>2647599: vmx01 RP/0/RSP1/CPU0:Mar 28 15:08:30.941 UTC: bgp[1051]: %ROUTING-BGP-5-MAXPFX : No. of IPv4 Unicast prefixes received from 1.2.3.4 has reached 94106, max 125000
-# <187>94307: gw2.acy1 LC/0/2/CPU0:Jul  7 20:16:14.834 : ifmgr[214]: %PKT_INFRA-LINK-3-UPDOWN : Interface TenGigE0/2/0/4, changed state to Down
-# <187>: 2019 Apr 18 11:00:27 UTC: %AUTHPRIV-3-SYSTEM_MSG: pam_aaa:Authentication failed from 104.248.178.100 - dcos_sshd[15056]
-# <187>: 2019 Apr 18 11:00:49 UTC: %AUTHPRIV-3-SYSTEM_MSG: pam_aaa:Authentication failed from 111.231.139.30 - dcos_sshd[15125]
-# <25>Jun 21 14:03:12  vmx01 eswd[2902]: ESWD_BPDU_BLOCK_ERROR_DISABLED:ge-0/0/17.0: bpdu-block disabled port
-# <149>Apr 16 11:04:17 edge01 Rib: %BGP-3-NOTIFICATION: received from neighbor 194.53.172.97 (AS 2611) 6/1 (Cease/maximum number of prefixes reached) 0 bytes
-# <87>Jul  5 05:52:44  vmx01 rpd[1848]: bgp_read_message:2764: NOTIFICATION received from 1.2.3.4 (External AS 1234): code 6 (Cease) subcode 5 (Connection Rejected)
-# """
-# msgs = msgs.splitlines()
-# import json
-#
-# for msg in msgs:
-#     if not msg:
-#         continue
-#     s = SyslogMsg.create_msg('192.168.1.1', msg)
-#     if not s:
-#         continue
-#     print(json.dumps(s.get_dictionary(), indent=4))
-#     print("=============================")

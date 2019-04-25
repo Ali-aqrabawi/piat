@@ -1,9 +1,17 @@
 from pysnmp.smi import rfc1902
 from datetime import datetime
+from piat.utils.logger import get_logger
+
+LOGGER = get_logger(__name__)
 
 
 class TrapMsg:
     def __init__(self, var_binds, viewer):
+        """
+        Trap Msg Object.
+        :param var_binds: pysnmp var_binds.
+        :param viewer: pysnmp MibViewController
+        """
         self._var_binds = var_binds
         self._viewer = viewer
 
