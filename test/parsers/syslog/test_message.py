@@ -1,4 +1,5 @@
-from unittest import TestCase
+from unittest import TestCase, mock
+from piat.parsers.syslog.message import SyslogMsg
 
 TEST_MSGS_CASE1 = {
     'cisco': '<187>: 2019 Apr 18 10:57:54 UTC: %AUTHPRIV-3-SYSTEM_MSG: pam_aaa:Authentication failed from 119.29.170.202 - dcos_sshd[14361]',
@@ -20,13 +21,82 @@ TEST_MSGS_CASE2 = {
 }
 
 
-class TestDetectVendorMessage(TestCase):
+class TestModule(TestCase):
 
     def test_detect_vendor_from_msg(self):
         from piat.parsers.syslog.message import detect_vendor_from_msg
-        for case in [TEST_MSGS_CASE1,TEST_MSGS_CASE2]:
+        for case in [TEST_MSGS_CASE1, TEST_MSGS_CASE2]:
             for vendor, msg in case.items():
                 result = detect_vendor_from_msg(msg)
-                self.assertEqual(result['name'],vendor,msg='detect_vendor_from_msg not detecting correct vendor msg')
+                self.assertEqual(result['name'], vendor, msg='detect_vendor_from_msg not detecting correct vendor msg')
 
 
+class TestSyslogMsg(TestCase):
+
+    def setUp(self):
+        self.csco_desc = {
+            'name': 'cisco',
+            'sig': '\d',
+            'fields': {
+                '_pri': r'<(\d+)>',
+                '_tag': r'(\S+):',
+                '_msg': r':(.*)',
+                '_invalid': '34'
+            }
+        }
+        self.ip = '1.1.1.1'
+        self.data = '<11> this_is_tag: this is a test syslog message'
+        SyslogMsg.fields = self.csco_desc['fields']
+
+    @mock.patch('piat.parsers.syslog.message.LOGGER')
+    def test__parse(self, mock_LOGGER):
+        msg = SyslogMsg(self.ip, self.data)
+        self.assertEqual(msg._pri, self.data[1:3])
+        self.assertEqual(msg.message, ' this is a test syslog message')
+        self.assertEqual(msg._tag, 'this_is_tag')
+        mock_LOGGER.error.assert_called_with("failed to parse field: %r regex: %r, source: %r, data: %s" % ('_invalid',
+                                                                                                            '34',
+                                                                                                            self.ip,
+                                                                                                            self.data))
+
+    def test__get_facility_severity(self):
+        msg = SyslogMsg(self.ip, self.data)
+        msg._pri = '11'
+        result = msg._get_facility_severity()
+        self.assertEqual(result, ('user', 'error'))
+
+        msg._pri = '11'
+        result = msg._get_facility_severity()
+        self.assertEqual(result, ('user', 'error'))
+
+        msg._pri = '18'
+        result = msg._get_facility_severity()
+        self.assertEqual(result, ('mail', 'critical'))
+
+        msg._pri = '28'
+        result = msg._get_facility_severity()
+        self.assertEqual(result, ('daemon', 'warning'))
+
+    @mock.patch('piat.parsers.syslog.message.detect_vendor_from_msg')
+    def test_create_msg(self, mock_detect_vendor_from_msg):
+        mock_detect_vendor_from_msg.return_value = self.csco_desc
+        msg = SyslogMsg.create_msg(self.ip, self.data)
+
+        mock_detect_vendor_from_msg.assert_called_with(self.data)
+        self.assertIsInstance(msg, SyslogMsg)
+        self.assertEqual(msg.fields, self.csco_desc['fields'])
+
+        mock_detect_vendor_from_msg.return_value = None
+        msg = SyslogMsg.create_msg(self.ip, self.data)
+        self.assertIsNone(msg)
+
+    def test_get_dictionary(self):
+        msg = SyslogMsg(self.ip, self.data)
+        msg.timestamp = 'test_time'
+        msg.tag = 'test_tag'
+        msg.severity = 'test_sev'
+        msg.facility = 'test_fac'
+        msg.message = 'test message'
+        self.assertEqual(msg.get_dictionary(),
+                         {'ip': '1.1.1.1', 'timestamp': 'test_time', 'tag': 'test_tag', 'severity': 'test_sev',
+                          'facility': 'test_fac', 'msg': 'test message'})

@@ -17,6 +17,6 @@ class ThreadsManager:
             proc.start()
 
     def join(self):
-        """ join callbacks """
+        """ join callbacks gt"""
         for proc in self.proc_pool:
             proc.join()
