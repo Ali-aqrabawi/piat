@@ -1,6 +1,7 @@
 # Piat Project
 
 Piat is a syslog and trap listeners APIs which are easy to use,
+it support syslog parsing for multiple vendors
 
 ### Installing
 
@@ -104,6 +105,14 @@ also you can run only trap server:
         server = SnmpTrapServer(callbacks=[trap_cb],community='my_comm')
         server.start()
 
+#### Supported Vendors:
+1) Cisco.
+2) Arista.
+3) Juniprt.
+4) Huawei.
+5) HP.
+6) F5.
+7) Fortinet.
 
 #### Features:
 1) you can pass as many callback as you want, all callbacks will be running concurrently
@@ -115,4 +124,5 @@ set `use_precombiled_mibs` kwarg to `True` or `False`
 to pass the mib dir location.
 5) Piat uses `pysnmp` for trap listening, so if you want to extend the mib support you
 need to combile the mib files using `mibdump.py` command provided by `pysnmp` to combile
-the new mibs, then add the compiled mibs dir to piat server using `add_mib_dir`
+the new mibs, then add the compiled mibs dir to piat server using `add_mib_dir`.
+6) we only support Syslog parsing described by [rfc3164](https://tools.ietf.org/html/rfc3164).
