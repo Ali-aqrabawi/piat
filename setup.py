@@ -17,6 +17,7 @@ setuptools.setup(
     include_package_data=True,
     install_requires=['pysnmp'],
     classifiers=[
+        "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",

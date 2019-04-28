@@ -1,4 +1,8 @@
 # Piat Project
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/piat.svg)
+![PyPI](https://img.shields.io/pypi/v/piat.svg)
+![PyPI - Status](https://img.shields.io/pypi/status/piat.svg)
+![PyPI - License](https://img.shields.io/pypi/l/piat.svg)
 
 Piat is a syslog and trap listeners APIs which are easy to use,
 it support syslog parsing for multiple vendors
