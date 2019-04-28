@@ -61,8 +61,8 @@ class SnmpTrapServer:
             "callbacks should be list of functions type not %s" % type(
                 self._callbacks)
 
-        snmp_enginer = engine.SnmpEngine()
-        build = snmp_enginer.getMibBuilder()
+        snmp_engine = engine.SnmpEngine()
+        build = snmp_engine.getMibBuilder()
         if self._use_precombiled_mibs:
             build.addMibSources(builder.DirMibSource(os.environ['PIAT_MIB_PATH']))
 
@@ -77,13 +77,13 @@ class SnmpTrapServer:
         viewer = view.MibViewController(build)
         # UDP over IPv4, first listening interface/port
         transport = udp.UdpTransport()
-        config.addTransport(snmp_enginer, udp.domainName + (1,), transport.openServerMode(('0.0.0.0', self._port)))
+        config.addTransport(snmp_engine, udp.domainName + (1,), transport.openServerMode(('0.0.0.0', self._port)))
         # SecurityName <-> CommunityName mapping
-        config.addV1System(snmp_enginer, '????', self._community)
+        config.addV1System(snmp_engine, '????', self._community)
         # Register SNMP Application at the SNMP engine
         handler = TrapsHandler(self._callbacks, viewer)
-        ntfrcv.NotificationReceiver(snmp_enginer, handler.handle)
-        self._snmpEngine = snmp_enginer
+        ntfrcv.NotificationReceiver(snmp_engine, handler.handle)
+        self._snmpEngine = snmp_engine
 
     @restart_on_failure
     def start(self):

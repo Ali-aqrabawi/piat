@@ -20,12 +20,13 @@ class _SyslogHandler(socketserver.BaseRequestHandler):
         LOGGER.debug("received syslog message from %s, msg=%s", ip, data)
 
         syslog_msg = SyslogMsg.create_msg(ip, data)
-        # socket = self.request[1]
-        proc_mgr = ThreadsManager()
-        for callback in self.callbacks:
-            proc_mgr.add(callback, args=[syslog_msg, ])
 
-        proc_mgr.start()
+        threads_mgr = ThreadsManager()
+
+        for callback in self.callbacks:
+            threads_mgr.add(callback, args=[syslog_msg, ])
+
+        threads_mgr.start()
 
 
 class SyslogServer:
@@ -35,8 +36,7 @@ class SyslogServer:
         self._callbacks = callbacks
         self._port = port
         self._setup()
-        LOGGER.debug("adding %r callbacks to Trap server",
-                     ([func.__name__ for func in self._callbacks]))
+        LOGGER.debug("adding %r callbacks to Trap server" % ([func.__name__ for func in self._callbacks]))
 
     def _setup(self):
         """ Setup Server"""
