@@ -1,11 +1,10 @@
 # Piat Project
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5d3fa6d31e37482c8cf95036816f7397)](https://app.codacy.com/app/Ali-aqrabawi/piat?utm_source=github.com&utm_medium=referral&utm_content=Ali-aqrabawi/piat&utm_campaign=Badge_Grade_Dashboard)
-
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/piat.svg)
 ![PyPI](https://img.shields.io/pypi/v/piat.svg)
 ![PyPI - Status](https://img.shields.io/pypi/status/piat.svg)
 ![PyPI - License](https://img.shields.io/pypi/l/piat.svg)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5d3fa6d31e37482c8cf95036816f7397)](https://app.codacy.com/app/Ali-aqrabawi/piat?utm_source=github.com&utm_medium=referral&utm_content=Ali-aqrabawi/piat&utm_campaign=Badge_Grade_Dashboard)
+
 
 Piat is a syslog and trap listeners APIs which are easy to use,
 it support syslog parsing for multiple vendors
