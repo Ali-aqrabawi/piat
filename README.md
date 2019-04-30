@@ -22,13 +22,13 @@ to run both listeners/servers use the PiatServer API:
     from piat.servers import PiatServer
 
     def syslog_cb(syslog_msg):
-        """ callback to be executed on rev syslog msg """
+        """ callback to be executed on received syslog msg """
         data = syslog_msg.get_dictionary()
         # do something with syslog data
         print(data)
 
     def trap_cb(trap_msg):
-        """ callback to be executed on rev trap msg """
+        """ callback to be executed on received trap msg """
         data = trap_msg.get_dictionary()
         # do something with trap data
         print(data)
