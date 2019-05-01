@@ -114,7 +114,7 @@ also you can run only trap server:
 #### Supported Vendors:
 1) Cisco.
 2) Arista.
-3) Junipr.
+3) Juniper.
 4) Huawei.
 5) HP.
 6) F5.
