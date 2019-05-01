@@ -37,5 +37,5 @@ class TestSyslogServer(TestCase):
 
         self.assertEqual(s._port, 514)
 
-        mock_LOGGER.debug.assert_called_with("adding ['cb1', 'cb2'] callbacks to Trap server")
+        mock_LOGGER.info.assert_called_with("registered ['cb1', 'cb2'] callbacks to Syslog server")
         mock_socketserver.UDPServer.assert_called_with(('0.0.0.0', 514), _SyslogHandler)
