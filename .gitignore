@@ -5,7 +5,7 @@ __pycache__/
 .venv/
 venv/
 ENV/
-
+logs/
 .idea/
 
 main.py
