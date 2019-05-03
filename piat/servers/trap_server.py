@@ -19,7 +19,7 @@ class TrapsHandler:
         self._callbacks = callbacks
         self._viewer = viewer
         LOGGER.info("registered %r callbacks to Trap server",
-                     [func.__name__ for func in self._callbacks])
+                    [func.__name__ for func in self._callbacks])
 
     def handle(self, snmp_engine,
                state_reference, context_engine_id,
@@ -46,12 +46,10 @@ class SnmpTrapServer:
                  callbacks,
                  community='public',
                  port=162,
-                 use_precombiled_mibs=True,
                  add_mib_dir=''):
         self._callbacks = callbacks
         self._port = port
         self._community = community
-        self._use_precombiled_mibs = use_precombiled_mibs
         self._add_mib_dir = add_mib_dir
         self._setup()
 
@@ -63,8 +61,6 @@ class SnmpTrapServer:
 
         snmp_engine = engine.SnmpEngine()
         build = snmp_engine.getMibBuilder()
-        if self._use_precombiled_mibs:
-            build.addMibSources(builder.DirMibSource(os.environ['PIAT_MIB_PATH']))
 
         if self._add_mib_dir:
             if not os.path.exists(self._add_mib_dir):
