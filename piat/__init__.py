@@ -4,10 +4,9 @@
 #
 # Piat is free software licensed under MIT License.
 
-import os
 import sys
 
-__version__ = '0.0.13'
+__version__ = '0.0.14'
 __author__ = 'Ali Aqrabawi'
 
 try:
@@ -15,6 +14,3 @@ try:
         raise RuntimeError('piat requires Python3')
 except AttributeError:
     raise RuntimeError('piat requires Python3')
-
-DIR_PATH = os.path.dirname(os.path.realpath(__file__))
-os.environ["PIAT_MIB_PATH"] = os.path.join(DIR_PATH, 'mibs')

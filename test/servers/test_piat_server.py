@@ -11,7 +11,7 @@ class TestPiatServer(TestCase):
         s = PiatServer([], [])
 
         mock_syslog_server.assert_called_with([], 514)
-        mock_snmp_trap_server.assert_called_with([], 'public', 162, True, '')
+        mock_snmp_trap_server.assert_called_with([], 'public', 162, '')
 
         calls = [mock.call(target=mock_syslog_server().start),
                  mock.call(target=mock_snmp_trap_server().start)]
