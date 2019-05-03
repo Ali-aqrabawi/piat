@@ -36,8 +36,7 @@ to run both listeners/servers use the PiatServer API:
     if __name__ == '__main__':
         server = PiatServer(traps_callbacks=[trap_cb],
                             syslog_callbacks=[syslog_cb],
-                            trap_community='my_community',
-                            use_precombiled_mibs=True)
+                            trap_community='my_community')
         server.start()
 
 syslog data example :
@@ -124,11 +123,9 @@ also you can run only trap server:
 1) you can pass as many callback as you want, all callbacks will be running concurrently
 in separate threads.
 2) both syslog and trap will be running as an independent process.
-3) Piat come with precompiled mibs, to enable/disable the use of pre-combiled mibs 
-set `use_precombiled_mibs` kwarg to `True` or `False`
-4) you can add more mib dir to be used by the trap server, use `add_mib_dir` kwarg 
+3) you can add more mib dir to be used by the trap server, use `add_mib_dir` kwarg 
 to pass the mib dir location.
-5) Piat uses `pysnmp` for trap listening, so if you want to extend the mib support you
+4) Piat uses `pysnmp` for trap listening, so if you want to extend the mib support you
 need to combile the mib files using `mibdump.py` command provided by `pysnmp` to combile
 the new mibs, then add the compiled mibs dir to piat server using `add_mib_dir`.
-6) we only support Syslog parsing described by [rfc3164](https://tools.ietf.org/html/rfc3164).
+5) we only support Syslog parsing described by [rfc3164](https://tools.ietf.org/html/rfc3164).

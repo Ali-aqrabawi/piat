@@ -25,7 +25,6 @@ class PiatServer:
                  syslog_port=514,
                  trap_port=162,
                  trap_community='public',
-                 use_precombiled_mibs=True,
                  add_mib_dir=''):
 
         self._syslog_callbacks = syslog_callbacks
@@ -33,7 +32,6 @@ class PiatServer:
         self._syslog_port = syslog_port
         self._trap_port = trap_port
         self._trap_community = trap_community
-        self._use_precombiled_mibs = use_precombiled_mibs
         self._add_mib_dir = add_mib_dir
         self._processes = []
 
@@ -46,7 +44,6 @@ class PiatServer:
         trap_server = SnmpTrapServer(self._trap_callbacks,
                                      self._trap_community,
                                      self._trap_port,
-                                     self._use_precombiled_mibs,
                                      self._add_mib_dir)
 
         syslog_proc = Process(target=syslog_server.start)
