@@ -117,7 +117,7 @@ class SyslogMsg:
     def get_dictionary(self):
         return {
             'ip': self.ip,
-            'timestamp': str(self.timestamp),
+            'timestamp': self.timestamp,
             'tag': self.tag,
             'severity': self.severity,
             'facility': self.facility,

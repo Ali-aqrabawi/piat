@@ -7,6 +7,7 @@ LOGGER = get_logger(__name__)
 
 class TrapMsg:
     """ Trap msg Object """
+
     def __init__(self, var_binds, viewer):
         """
         Trap Msg Object.
@@ -22,7 +23,7 @@ class TrapMsg:
         self._parse()
 
         self.result = {'ip': self._parsed_data['snmpTrapAddress'],
-                       'timestamp': str(self.timestamp), **self._parsed_data}
+                       'timestamp': self.timestamp, **self._parsed_data}
 
     def _parse(self):
         """ translate the trap msg with the mib viewer """
