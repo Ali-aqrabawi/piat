@@ -3,6 +3,7 @@
 ![PyPI](https://img.shields.io/pypi/v/piat.svg)
 ![PyPI - Status](https://img.shields.io/pypi/status/piat.svg)
 ![PyPI - License](https://img.shields.io/pypi/l/piat.svg)
+[<img src="https://api.gitsponsors.com/api/badge/img?id=183950994" height="20">](https://api.gitsponsors.com/api/badge/link?p=u5YH0C8wkV3dm7RXdDn1a+yHUf3fmRDZzRW9umpijErkph+f4KD7GAOKUgjaoPrq)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5d3fa6d31e37482c8cf95036816f7397)](https://app.codacy.com/app/Ali-aqrabawi/piat?utm_source=github.com&utm_medium=referral&utm_content=Ali-aqrabawi/piat&utm_campaign=Badge_Grade_Dashboard)
 
 
